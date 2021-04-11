@@ -11,14 +11,12 @@ router.post('/login', UserController.login)
 
 
 router.get('/details', auth.verify ,UserController.details)
-// (req,res) =>{
 
-// 	(req.decodedToken.id).then(result => res.send(result))
-// })
-
+router.get('/details-landing', UserController.userLanding)
 
 router.post('/verify-google-id-token', async (req, res) => {
 	res.send( await UserController.verifyGoogleTokenId(req.body.tokenId))
 })
 
+router.post('/update-savings', auth.verify, UserController.updateSavings)
 module.exports = router;

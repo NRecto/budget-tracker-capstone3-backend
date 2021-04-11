@@ -33,12 +33,19 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: [true, 'loginType is required']
 	},
-	ledger: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Ledger'
-		}
-	],
+	savings: {
+		type: Number,
+		required: [true, "savings is required"],
+		default: 0
+	},
+	records: [{
+		ledger: 
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Ledger'
+				}
+	}],
+	
 	categories: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

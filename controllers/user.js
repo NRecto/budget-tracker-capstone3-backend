@@ -9,24 +9,27 @@ const clientId= '430272439226-6evoa7j40inti7gc8o80dn1mg59urgd3.apps.googleuserco
 // Check for duplicate emails
 module.exports.emailExists = (req, res) => {
 
-	return User.find({ email: req.body.email }).then(result => {
-		return result.length > 0 ? true : false;
+	User.find({ email: req.body.email }).then(result => {
+		result.length > 0 ? res.send(true) : res.send(false);
 	})
 
 }
 
 module.exports.register = (req, res)=>{
-	const { firstName, lastName, email, mobileNo, loginType} = req.body
+	const { firstName, lastName, email, mobileNo} = req.body
 	let data = {
 		firstName,
 		lastName,
 		email,
 		mobileNo,
 		password: bcrypt.hashSync(req.body.password, 10),
-		loginType
+		loginType: 'email'
 	}
 	User.create(data)
-	.then( result => res.send(result))
+	.then( result => {
+		if(!result) res.send({err: 'Registration Failed'});
+		res.send(result);
+	})
 	.catch( err => err.message)
 	
 
@@ -77,7 +80,7 @@ module.exports.verifyGoogleTokenId = async (tokenId) => {
 	
 	if (data.payload.email_verified === true) {
 		const user = await User.findOne({ email: data.payload.email })
-		console.log(user)
+		// console.log(user)
 		if( user !== null ) {
 			if ( user.loginType === 'google'){
 				return { accessToken: auth.createAccessToken(user.toObject())}
@@ -98,4 +101,14 @@ module.exports.verifyGoogleTokenId = async (tokenId) => {
 	} else {
 		return { error : 'google-auth-error'}
 	}
+}
+
+module.exports.updateSavings = (req, res ) => {
+
+}
+
+module.exports.userLanding = ( req, res ) => {
+	User.find()
+	.then( result => res.send(result) )
+	.catch(err => res.send(err.message) )
 }

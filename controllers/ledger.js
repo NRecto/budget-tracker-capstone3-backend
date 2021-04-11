@@ -1,5 +1,6 @@
 const Ledger = require('./../models/Ledger');
 const Categories = require('./../models/Categories');
+const User = require('../models/User');
 
 module.exports.addTransaction = (req, res) => {
 
@@ -23,7 +24,10 @@ module.exports.addTransaction = (req, res) => {
         }
         
         Ledger.create(data)
-        .then( result => res.send({data:result}))
+        .then( result => {
+            User.findByIdAndUpdate(req.decodedToken.id, {$push: {ledger: result.__id}})
+            res.send({data:result})
+        })
         .catch( err => res.send(err))
 
     })
@@ -35,7 +39,6 @@ module.exports.addTransaction = (req, res) => {
 module.exports.getAll = (req, res) => {
     Ledger.find()
     .then(result => {
-        console.log(result)
-        res.json({data:result})})
+        res.send(result)})
     .catch( err => res.send({err}))
 }

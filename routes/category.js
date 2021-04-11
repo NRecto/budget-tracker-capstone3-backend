@@ -4,6 +4,6 @@ const auth = require('./../auth');
 
 router.post('/', auth.verify,  CategoriesController.addTransaction)
 
-router.get('/', auth.verify, CategoriesController.getAll)
+router.get('/', CategoriesController.getAll)
 
 module.exports = router;
