@@ -26,12 +26,38 @@ module.exports.addTransaction = (req, res) => {
         Ledger.create(data)
         .then( result => {
             User.findByIdAndUpdate(req.decodedToken.id, {$push: {ledger: result.__id}})
-            res.send({data:result})
+            .then( () => {
+                Ledger.find({user: req.decodedToken.id})
+                .then( result => {
+
+                    totalIncome = 0;
+                    totalExpense = 0;
+                    let total= 0;
+
+                    const userIncome = result.filter( data => data.type === "Income");
+                    const userExpense = result.filter( data => data.type === "Expense");
+                    userIncome.forEach(data => {
+                        return totalIncome += parseInt(data.amount)
+                    })
+                    userExpense.forEach(data => {
+                        return totalExpense += parseInt(data.amount)
+                    })
+                    total = (totalIncome - totalExpense);
+                    return({ total });
+                })
+                .then( data => {
+                    User.findByIdAndUpdate(req.decodedToken.id, { savings: data.total}, {new: true} )
+                    .then( result => res.send(result))
+                    .catch( err => err.message)
+                })
+                .catch( err => err.message)
+            })
+            .catch( err => err.message)
+            res.send({data:result}) 
         })
         .catch( err => res.send(err))
 
     })
-    
     
 
 }

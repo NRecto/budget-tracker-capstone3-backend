@@ -1,5 +1,5 @@
 const User = require('./../models/User');
-// const Course = require('./../models/Course');
+const Ledger = require('./../models/Ledger');
 const bcrypt = require('bcrypt');
 const auth = require('./../auth');
 const {OAuth2Client} =require('google-auth-library');
@@ -13,7 +13,7 @@ module.exports.emailExists = (req, res) => {
 		result.length > 0 ? res.send(true) : res.send(false);
 	})
 
-}
+};
 
 module.exports.register = (req, res)=>{
 	const { firstName, lastName, email, mobileNo} = req.body
@@ -31,10 +31,7 @@ module.exports.register = (req, res)=>{
 		res.send(result);
 	})
 	.catch( err => err.message)
-	
-
-
-}
+};
 
 module.exports.login = (req, res) => {
 	
@@ -53,8 +50,6 @@ module.exports.login = (req, res) => {
 		if (!isPasswordMatched) {
 			res.send({ error: 'incorrect-password'})
 		}
-		
-		
 		let accessToken = auth.createAccessToken(user)
 
 		res.send( {
@@ -62,11 +57,11 @@ module.exports.login = (req, res) => {
 		})
 
 	})
-}
+};
 
 module.exports.details = (req, res) =>{
 	User.findById(req.decodedToken.id, { password: 0 }).then( user => res.send(user))
-}
+};
 
 
 // Google Login (Token Verification)
@@ -101,14 +96,10 @@ module.exports.verifyGoogleTokenId = async (tokenId) => {
 	} else {
 		return { error : 'google-auth-error'}
 	}
-}
-
-module.exports.updateSavings = (req, res ) => {
-
-}
+};
 
 module.exports.userLanding = ( req, res ) => {
 	User.find()
 	.then( result => res.send(result) )
 	.catch(err => res.send(err.message) )
-}
+};
