@@ -13,14 +13,13 @@ module.exports.addTransaction = (req, res) => {
 
         Categories.find({name: nameLowerCase, user: req.decodedToken.id, type: req.body.type})
         .then( result => {
-            // console.log(result)
-            // console.log(req.decodedToken.id)
+
             if( result.length > 0){
                 res.send({err: 'name-already-exist'})
             } else {
                 Categories.create(data)
                 .then( result => {
-                    console.log(result._id)
+
                     User.findByIdAndUpdate(req.decodedToken.id, {$push: { categories: [{category: result._id}] }}, {new:true} ).then(() => true)
                     
                     res.send({data:result})
