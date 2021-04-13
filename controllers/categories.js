@@ -11,7 +11,7 @@ module.exports.addTransaction = (req, res) => {
 			}
 
 
-        Categories.find({name: nameLowerCase, user: req.decodedToken.id})
+        Categories.find({name: nameLowerCase, user: req.decodedToken.id, type: req.body.type})
         .then( result => {
             // console.log(result)
             // console.log(req.decodedToken.id)
