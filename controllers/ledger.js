@@ -25,7 +25,7 @@ module.exports.addTransaction = (req, res) => {
         
         Ledger.create(data)
         .then( result => {
-            User.findByIdAndUpdate(req.decodedToken.id, {$push: {ledger: result.__id}})
+            User.findByIdAndUpdate(req.decodedToken.id, {$push: { records: [{ledger: result.__id}]}} )
             .then( () => {
                 Ledger.find({user: req.decodedToken.id})
                 .then( result => {

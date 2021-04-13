@@ -45,13 +45,12 @@ const userSchema = new mongoose.Schema({
 					ref: 'Ledger'
 				}
 	}],
-	
-	categories: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Categories'
-		}
-	]
+	categories: [{
+		category:	{
+						type: mongoose.Schema.Types.ObjectId,
+						ref: 'Categories'
+					}
+	}]
 })
 
 module.exports = mongoose.model("User", userSchema);

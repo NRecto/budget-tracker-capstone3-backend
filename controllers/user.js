@@ -27,10 +27,9 @@ module.exports.register = (req, res)=>{
 	}
 	User.create(data)
 	.then( result => {
-		if(!result) res.send({err: 'Registration Failed'});
 		res.send(result);
 	})
-	.catch( err => err.message)
+	.catch( err => res.send({err: err.message}))
 };
 
 module.exports.login = (req, res) => {

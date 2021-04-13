@@ -2,20 +2,34 @@ const Categories = require('./../models/Categories')
 const User = require('./../models/User')
 
 module.exports.addTransaction = (req, res) => {
-
+         let nameLowerCase = req.body.name.toLowerCase();
+         
         let data = {
-			name: req.body.name,
+			name: nameLowerCase,
 			type: req.body.type,
 			user: req.decodedToken.id
 			}
 
-        
-        Categories.create(data)
+
+        Categories.find({name: nameLowerCase, user: req.decodedToken.id})
         .then( result => {
-            if(!result) res.send({err: "error on adding"});
-            res.send({data:result})
+            // console.log(result)
+            // console.log(req.decodedToken.id)
+            if( result.length > 0){
+                res.send({err: 'name-already-exist'})
+            } else {
+                Categories.create(data)
+                .then( result => {
+                    console.log(result._id)
+                    User.findByIdAndUpdate(req.decodedToken.id, {$push: { categories: [{category: result._id}] }}, {new:true} ).then(() => true)
+                    
+                    res.send({data:result})
+                })
+                .catch( err => res.send(err))
+            }
         })
-        .catch( err => res.send(err))
+        
+        
     
 }
 
