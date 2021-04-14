@@ -20,7 +20,8 @@ module.exports.addTransaction = (req, res) => {
             amount,
             description,
             user: req.decodedToken.id,
-            category: newResult
+            category: newResult,
+            createdOn: new Date()
         }
         
         Ledger.create(data)
