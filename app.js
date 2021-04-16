@@ -10,6 +10,7 @@ mongoose.connection.on('error', () => { console.log("Error connecting to databse
 mongoose.connection.once('open', () =>{ console.log("Connected to databse")})
 
 app.use(cors());
+app.options('*', cors());
 app.use(express.json());
 
 const userRoutes = require('./routes/user.js');
